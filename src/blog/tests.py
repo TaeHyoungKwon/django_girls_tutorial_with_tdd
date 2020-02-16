@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
+from django.urls import reverse
 from django.utils import timezone
 from freezegun import freeze_time
 
@@ -55,3 +56,18 @@ class TestAdmin(TestCase):
 
         # Then: admin page shoud have 'Posts' string cause of registering model
         self.assertIn("Posts", str(response.content))
+
+
+class TestViews(TestCase):
+    def setUp(self) -> None:
+        self.c = Client()
+
+    def test_post_list_should_have_django_girls_blog_text(self):
+        # Given: Set django girls blog text
+        DJANGO_GIRLS_BLOG_TEXT = "Django Girls blog"
+
+        # When: Call post_list in views.py
+        response = self.c.get(reverse("blog:list"))
+
+        # Then: post_list should have django_girls_blog_text
+        self.assertIn(DJANGO_GIRLS_BLOG_TEXT, str(response.content))
