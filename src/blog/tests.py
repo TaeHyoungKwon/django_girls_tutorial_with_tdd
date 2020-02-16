@@ -64,10 +64,10 @@ class TestViews(TestCase):
 
     def test_post_list_should_have_django_girls_blog_text(self):
         # Given: Set django girls blog text
-        DJANGO_GIRLS_BLOG_TEXT = "Django Girls blog"
+        django_girls_blog_text = "Django Girls blog"
 
         # When: Call post_list in views.py
         response = self.c.get(reverse("blog:list"))
 
         # Then: post_list should have django_girls_blog_text
-        self.assertIn(DJANGO_GIRLS_BLOG_TEXT, str(response.content))
+        self.assertIn(django_girls_blog_text, str(response.content))
