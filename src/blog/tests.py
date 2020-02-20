@@ -4,6 +4,8 @@ from django.urls import reverse
 from django.utils import timezone
 from freezegun import freeze_time
 
+from datetime import datetime
+
 from blog.models import Post
 
 
@@ -98,3 +100,16 @@ class TestViews(TestCase):
 
         # Then: post_list should return context about posts - filtered by publisehd date less than or equal to today
         self.assertLessEqual(post_instance[0].published_date, timezone.now())
+
+    def test_post_list_should_return_rendered_template_with_post_title_and_text_and_published_date(
+        self
+    ):
+        # When: Call post_list in views.py
+        response = self.c.get(reverse("blog:list"))
+        print(response.content)
+
+        # Then: post_list should return post title, text and published:
+        post_instance = response.context["posts"]
+        self.assertIn(post_instance[0].title, str(response.content))
+        self.assertIn(post_instance[0].text, str(response.content))
+        self.assertIn("published: ", str(response.content))
