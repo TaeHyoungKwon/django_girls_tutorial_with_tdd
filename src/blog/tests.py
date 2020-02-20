@@ -62,6 +62,16 @@ class TestViews(TestCase):
     def setUp(self) -> None:
         self.c = Client()
 
+        user = User.objects.create_superuser(
+            username="admin",
+            email="kwon5604@naver.com",
+            password="admin_password",
+        )
+        posts = Post.objects.create(
+            title="test post", text="test text", author=user
+        )
+        posts.publish()
+
     def test_post_list_should_have_django_girls_blog_text(self):
         # Given: Set django girls blog text
         django_girls_blog_text = "Django Girls blog"
@@ -71,3 +81,20 @@ class TestViews(TestCase):
 
         # Then: post_list should have django_girls_blog_text
         self.assertIn(django_girls_blog_text, str(response.content))
+
+    def test_post_list_should_return_context_about_posts(self):
+        # When: Call post_list in views.py
+        response = self.c.get(reverse("blog:list"))
+
+        # Then: post_list should return context about posts
+        self.assertIn("posts", response.context)
+
+    def test_post_list_should_return_post_instance_filtered_by_published_date_less_than_or_equal_to_today(
+        self
+    ):
+        # When: Call post_list in views.py
+        response = self.c.get(reverse("blog:list"))
+        post_instance = response.context["posts"]
+
+        # Then: post_list should return context about posts - filtered by publisehd date less than or equal to today
+        self.assertLessEqual(post_instance[0].published_date, timezone.now())
