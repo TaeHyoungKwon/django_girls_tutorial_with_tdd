@@ -76,7 +76,7 @@ class TestViews(TestCase):
 
     def test_post_list_should_have_django_girls_blog_text(self):
         # Given: Set django girls blog text
-        django_girls_blog_text = "Django Girls blog"
+        django_girls_blog_text = "Django Girls Blog"
 
         # When: Call post_list in views.py
         response = self.c.get(reverse("blog:list"))
